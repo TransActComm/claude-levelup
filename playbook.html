@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Run the loop on your team — the playbook</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>⚒️</text></svg>">
+</head>
+<body>
+<style>
+:root{
+  --paper:#F3F6F4; --card:#FFFFFF; --ink:#16201C; --sub:#46534D; --muted:#5E6963;
+  --hair:#E0E5E1; --hair-soft:#EBEFEB;
+  --ember:#C2410C; --ember-bright:#E2611B; --ember-soft:#F7ECE4;
+  --jade:#0E6E54; --jade-bright:#1E9C77; --jade-soft:#E1F2EB;
+  --steel:#3E5C76; --steel-soft:#E7ECF1;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#0F1311; --card:#181C19; --ink:#ECF0ED; --sub:#AFB7B1; --muted:#7B857E;
+    --hair:#262B27; --hair-soft:#1F241F;
+    --ember:#E2611B; --ember-bright:#F1793A; --ember-soft:#26150C;
+    --jade:#3FB791; --jade-bright:#57C9A5; --jade-soft:#0C2A22;
+    --steel:#7F9BB5; --steel-soft:#152029;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#F3F6F4; --card:#FFFFFF; --ink:#16201C; --sub:#46534D; --muted:#5E6963;
+  --hair:#E0E5E1; --hair-soft:#EBEFEB;
+  --ember:#C2410C; --ember-bright:#E2611B; --ember-soft:#F7ECE4;
+  --jade:#0E6E54; --jade-bright:#1E9C77; --jade-soft:#E1F2EB;
+  --steel:#3E5C76; --steel-soft:#E7ECF1;
+}
+:root[data-theme="dark"]{
+  --paper:#0F1311; --card:#181C19; --ink:#ECF0ED; --sub:#AFB7B1; --muted:#7B857E;
+  --hair:#262B27; --hair-soft:#1F241F;
+  --ember:#E2611B; --ember-bright:#F1793A; --ember-soft:#26150C;
+  --jade:#3FB791; --jade-bright:#57C9A5; --jade-soft:#0C2A22;
+  --steel:#7F9BB5; --steel-soft:#152029;
+}
+
+*{box-sizing:border-box}
+:root{
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:400 16px/1.66 var(--sans);-webkit-font-smoothing:antialiased}
+.page{max-width:788px;margin:0 auto;padding:52px 30px 76px}
+
+.backlink{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--mono);letter-spacing:.03em;
+  color:var(--jade);text-decoration:none;margin:0 0 26px;padding-bottom:2px;border-bottom:1px solid transparent}
+.backlink:hover{border-bottom-color:var(--jade)}
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+h1{font:600 34px/1.16 var(--serif);letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+.lede{color:var(--sub);font-size:17px;line-height:1.6;max-width:60ch;margin:0}
+.lede b{color:var(--ink);font-weight:600}
+
+section{margin-top:56px}
+.kicker{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+h2{font:600 23px/1.25 var(--serif);margin:0 0 6px;text-wrap:balance}
+.note{color:var(--sub);font-size:15px;line-height:1.6;margin:0 0 24px;max-width:64ch}
+code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;border-radius:4px}
+
+/* ---- scenarios ---- */
+.scenarios{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start}
+.scn{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:20px 21px}
+.scn .tag{font:600 10.5px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);
+  border:1px solid var(--steel);border-radius:5px;padding:3px 7px;display:inline-block}
+.scn .st{font:600 16px/1.3 var(--serif);color:var(--ink);margin:11px 0 4px}
+.scn .sd{font-size:13.5px;line-height:1.55;color:var(--sub);margin:0}
+.scn .sd b{color:var(--ink);font-weight:600}
+.track{display:flex;gap:0;margin:15px 0 14px}
+.beat{display:flex;flex-direction:column;align-items:center;gap:5px;flex:1;min-width:0}
+.beat .dot{width:11px;height:11px;border-radius:50%;flex:none}
+.beat.on .dot{background:var(--jade)}
+.beat.off .dot{background:transparent;border:1.5px solid var(--muted)}
+.beat .bl{font:600 9px/1 var(--mono);letter-spacing:.02em;text-transform:uppercase;color:var(--muted);text-align:center}
+.beat.on .bl{color:var(--sub)}
+.scn .meta{font:500 11px/1.4 var(--mono);color:var(--muted);letter-spacing:.02em;margin:0 0 3px}
+
+/* ---- adoption kit ---- */
+.kit{list-style:none;margin:0;padding:0;counter-reset:k}
+.kit li{position:relative;padding:15px 0 15px 46px;border-top:1px solid var(--hair-soft);counter-increment:k}
+.kit li:first-child{border-top:none;padding-top:2px}
+.kit li::before{content:counter(k);position:absolute;left:0;top:14px;width:28px;height:28px;border-radius:50%;
+  background:var(--jade-soft);color:var(--jade);font:600 12px/1 var(--mono);
+  display:flex;align-items:center;justify-content:center}
+.kit li:first-child::before{top:1px}
+.kit .kh{font-weight:600;color:var(--ink);font-size:15px}
+.kit .kd{font-size:13.5px;color:var(--sub);line-height:1.55;margin-top:3px}
+.kit .kd code{font-size:12px}
+
+/* ---- references ---- */
+.refs{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:18px}
+.refgroup h3{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 4px}
+.refgroup ul{margin:0;padding:0;list-style:none}
+.refgroup li{font-size:13px;line-height:1.45;color:var(--ink);padding:9px 0;border-top:1px solid var(--hair-soft)}
+.refgroup li:first-of-type{border-top:none}
+.refgroup li span{color:var(--muted);display:block;font-size:12px;line-height:1.45;margin-top:2px}
+
+.closing{margin-top:56px;padding:20px 22px;border:1px solid var(--hair);border-radius:14px;background:var(--card)}
+.closing p{margin:0;font:italic 400 16px/1.55 var(--serif);color:var(--ink)}
+.closing .cta{font-style:normal;font:500 13px/1.4 var(--sans);color:var(--sub);margin-top:10px}
+.closing a{color:var(--jade);text-decoration:none;border-bottom:1px solid transparent}
+.closing a:hover{border-bottom-color:var(--jade)}
+
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--hair)}
+footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacing:.05em}
+
+@media (max-width:600px){
+  .page{padding:36px 18px 56px}
+  h1{font-size:27px} h2{font-size:20px}
+  .scenarios,.refs{grid-template-columns:1fr}
+  .beat .bl{font-size:8.5px}
+}
+</style>
+
+<div class="page">
+
+<a class="backlink" href="index.html" target="_blank" rel="noopener">&larr; back to the argument</a>
+
+<header>
+  <p class="eyebrow">Pathfinders engineering &middot; the playbook</p>
+  <h1>Run the loop on your team</h1>
+  <p class="lede">The case lives next door. This is the <b>how</b>: two changes walked through the loop at different sizes, the kit to stand it up, and the reading behind the practice.</p>
+</header>
+
+<section>
+  <p class="kicker">In practice</p>
+  <h2>The loop flexes to the work</h2>
+  <p class="note">Same line, same gates &mdash; whether the change is one file or a feature across services. What scales is how many stages fire and how many hands are on it.</p>
+  <div class="scenarios">
+
+    <div class="scn">
+      <span class="tag">one session &middot; minutes</span>
+      <p class="st">A one-file bug fix</p>
+      <div class="track">
+        <div class="beat off"><span class="dot"></span><span class="bl">spec</span></div>
+        <div class="beat off"><span class="dot"></span><span class="bl">plan</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">build</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">review</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">ship</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">learn</span></div>
+      </div>
+      <p class="sd">A district reports a setting behaving wrong. One session, one worktree: reproduce, find the root cause, one guard where every caller routes through. Draft PR &mdash; <b>Copilot flags a sibling case</b> the fix missed; the engineer handles it and verifies. A second human merges. Datadog confirms the error rate drops. <b>No spec needed &mdash; the loop scales down to a single gated PR.</b></p>
+    </div>
+
+    <div class="scn">
+      <span class="tag">many sessions &middot; days</span>
+      <p class="st">A feature across services</p>
+      <div class="track">
+        <div class="beat on"><span class="dot"></span><span class="bl">spec</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">plan</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">build</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">review</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">ship</span></div>
+        <div class="beat on"><span class="dot"></span><span class="bl">learn</span></div>
+      </div>
+      <p class="meta">&times; parallel sessions &middot; Slack + PR coordination</p>
+      <p class="sd">A new eligibility rule touching several services. It starts as a <b>brainstormed spec and plan &mdash; one living draft PR</b>, Copilot-reviewed, before code. Work fans out to parallel worktree sessions; handoffs ride a Slack thread, decisions ride PR comments. Every change clears the full gate. Staged rollout, watched by <b>Datadog monitors defined in Terraform</b>. The gotcha that bit us becomes a doctrine note; the reusable step becomes a team skill. <b>Same loop, turned up.</b></p>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <p class="kicker">Get it going</p>
+  <h2>Stand it up on your team</h2>
+  <p class="note">The kit is small and mostly convention. None of it is exotic &mdash; the discipline is in using it every time, not in the tools.</p>
+  <ol class="kit">
+    <li>
+      <div class="kh">Install the tooling</div>
+      <div class="kd">Claude Code, the review bot, and the team plugins &mdash; skills for your platform, plus the spec-driven workflow. Connect Slack, GitHub, and your observability provider so a session can read and write the shared surfaces.</div>
+    </li>
+    <li>
+      <div class="kh">Write the doctrine into <code>CLAUDE.md</code></div>
+      <div class="kd">The guardrails that stop vibe-coding: evidence before output, no gap-filling, cite the source, production read-only by default. This is what makes the output craft instead of plausible slop.</div>
+    </li>
+    <li>
+      <div class="kh">Make the PR the gate</div>
+      <div class="kd">Every change is a draft PR with the AI reviewer as first pass. A human graduates it and a second approves &mdash; nobody merges their own work. That gate on <code>main</code> is non-negotiable.</div>
+    </li>
+    <li>
+      <div class="kh">Isolate every session in a worktree</div>
+      <div class="kd">One worktree per branch or task; never branch-switch a shared clone. Isolation is what lets sessions run in parallel without colliding.</div>
+    </li>
+    <li>
+      <div class="kh">Open one coordination channel</div>
+      <div class="kd">A Slack thread for handoffs, shared state, and announcements; PR comments for the code-anchored record and any privileged asks. Isolated, not siloed.</div>
+    </li>
+    <li>
+      <div class="kh">Design with the same discipline</div>
+      <div class="kd">Brainstorm &rarr; spec &rarr; plan as living draft PRs before implementation. Validate the design the way you validate the code.</div>
+    </li>
+    <li>
+      <div class="kh">Close the loop</div>
+      <div class="kd">Observability (monitors kept in code), CI/CD via your actions runner + chatops, and a habit of feeding every learning back into skills, doctrine, and runbooks. The cycle is the point.</div>
+    </li>
+  </ol>
+</section>
+
+<section>
+  <p class="kicker">Further reading</p>
+  <h2>The foundations</h2>
+  <p class="note">The loop didn't come from nowhere. These are the sources the practice leans on &mdash; worth the shelf space whether or not you adopt the tooling.</p>
+  <div class="refs">
+    <div class="refgroup">
+      <h3>Architecture &amp; design</h3>
+      <ul>
+        <li>Vlad Khononov &mdash; <em>Balanced Coupling</em><span>Assess a seam on strength, distance, volatility. Decompose only where it converts a strong cross-deployable seam into a contract.</span></li>
+        <li>Richards &amp; Ford &mdash; <em>Software Architecture: The Hard Parts</em><span>No best practices, only trade-offs. Disintegrators vs. integrators; govern with fitness functions.</span></li>
+        <li>Gregor Hohpe &mdash; <em>The Software Architect Elevator</em><span>Ride between strategy and the engine room. Architecture is selling options.</span></li>
+        <li>AWS Well-Architected Framework<span>Six pillars. Surface which one a change trades against.</span></li>
+      </ul>
+    </div>
+    <div class="refgroup">
+      <h3>Leadership &amp; delivery</h3>
+      <ul>
+        <li>James Stanier &mdash; <em>Become an Effective Software Engineering Manager</em><span>Gather &rarr; Decide &rarr; Execute. Make the invisible visible; empower over heroics.</span></li>
+        <li>Humble &amp; Farley &mdash; <em>Continuous Delivery</em><span>Small, frequent, automated, reversible. The build/test/ship half of the loop.</span></li>
+        <li>Fowler &mdash; <em>Refactoring</em> &amp; the testing pyramid<span>Clean code and a healthy test shape are the craft the AI runs on top of.</span></li>
+      </ul>
+    </div>
+    <div class="refgroup">
+      <h3>The tooling</h3>
+      <ul>
+        <li>Claude Code<span>The agentic CLI the sessions run in.</span></li>
+        <li>GitHub Copilot code review<span>The automated first pass on every draft PR.</span></li>
+        <li>Superpowers<span>The spec-driven brainstorm &rarr; plan &rarr; execute workflow.</span></li>
+        <li>Team skills &amp; plugins<span>Platform workflows promoted from one engineer's shortcut into everyone's.</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="closing">
+  <p>Tokens are rented. Craft is owned.</p>
+  <p class="cta">The full argument, and the loop it comes from, live in <a href="index.html" target="_blank" rel="noopener">Claude burns the tokens; the team collects the XP</a>.</p>
+</div>
+
+<footer>
+  <p>Pathfinders engineering &middot; 2026</p>
+</footer>
+
+</div>
+</body>
+</html>

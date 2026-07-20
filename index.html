@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Claude burns the tokens; the team collects the XP</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>⚒️</text></svg>">
+</head>
+<body>
+<style>
+:root{
+  --paper:#F3F6F4; --card:#FFFFFF; --ink:#16201C; --sub:#46534D; --muted:#5E6963;
+  --hair:#E0E5E1; --hair-soft:#EBEFEB;
+  --ember:#C2410C; --ember-bright:#E2611B; --ember-soft:#F7ECE4;
+  --jade:#0E6E54; --jade-bright:#1E9C77; --jade-soft:#E1F2EB;
+  --steel:#3E5C76; --steel-soft:#E7ECF1;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#0F1311; --card:#181C19; --ink:#ECF0ED; --sub:#AFB7B1; --muted:#7B857E;
+    --hair:#262B27; --hair-soft:#1F241F;
+    --ember:#E2611B; --ember-bright:#F1793A; --ember-soft:#26150C;
+    --jade:#3FB791; --jade-bright:#57C9A5; --jade-soft:#0C2A22;
+    --steel:#7F9BB5; --steel-soft:#152029;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#F3F6F4; --card:#FFFFFF; --ink:#16201C; --sub:#46534D; --muted:#5E6963;
+  --hair:#E0E5E1; --hair-soft:#EBEFEB;
+  --ember:#C2410C; --ember-bright:#E2611B; --ember-soft:#F7ECE4;
+  --jade:#0E6E54; --jade-bright:#1E9C77; --jade-soft:#E1F2EB;
+  --steel:#3E5C76; --steel-soft:#E7ECF1;
+}
+:root[data-theme="dark"]{
+  --paper:#0F1311; --card:#181C19; --ink:#ECF0ED; --sub:#AFB7B1; --muted:#7B857E;
+  --hair:#262B27; --hair-soft:#1F241F;
+  --ember:#E2611B; --ember-bright:#F1793A; --ember-soft:#26150C;
+  --jade:#3FB791; --jade-bright:#57C9A5; --jade-soft:#0C2A22;
+  --steel:#7F9BB5; --steel-soft:#152029;
+}
+
+*{box-sizing:border-box}
+:root{
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:400 16px/1.66 var(--sans);-webkit-font-smoothing:antialiased}
+.page{max-width:788px;margin:0 auto;padding:60px 30px 76px}
+
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+h1{font:600 37px/1.16 var(--serif);letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+h1 .burn{color:var(--ember)} h1 .gain{color:var(--jade)}
+.lede{color:var(--sub);font-size:17.5px;line-height:1.6;max-width:60ch;margin:0}
+.lede b{color:var(--ink);font-weight:600}
+
+section{margin-top:60px}
+.kicker{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+h2{font:600 23px/1.25 var(--serif);margin:0 0 6px;text-wrap:balance}
+.note{color:var(--sub);font-size:15px;line-height:1.6;margin:0 0 24px;max-width:64ch}
+.note code{font:500 12px var(--mono);background:var(--jade-soft);padding:1px 5px;border-radius:4px}
+
+/* ---- the loop (hero) ---- */
+.loop{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:26px 24px}
+.flow{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;flex-direction:column;align-items:stretch;gap:0}
+.fuel,.yield{display:flex;align-items:center;gap:13px;padding:6px 2px}
+.fuel .cap,.yield .cap{font:500 11px/1.35 var(--mono);letter-spacing:.06em;text-transform:uppercase}
+.fuel .cap{color:var(--ember)} .yield .cap{color:var(--jade)}
+.fuel .cap span,.yield .cap span{display:block;color:var(--muted);letter-spacing:.02em;text-transform:none;font-weight:400;font-size:11px;margin-top:2px}
+
+.stage{min-width:0;border:1px solid var(--hair);border-radius:11px;background:var(--paper);padding:13px 15px}
+.stage .h{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap}
+.stage .t{font-weight:600;font-size:14.5px;color:var(--ink)}
+.stage .s{font-size:12.5px;color:var(--sub);line-height:1.5;margin-top:3px}
+.stage.gate{border-color:var(--steel);background:var(--steel-soft)}
+.badge{font:500 10px/1 var(--mono);letter-spacing:.09em;text-transform:uppercase;color:var(--steel);
+  border:1px solid var(--steel);border-radius:5px;padding:3px 6px;white-space:nowrap}
+.pyr{font:500 11px var(--mono);color:var(--steel);margin-top:8px;letter-spacing:.02em}
+.pyr b{color:var(--steel)}
+
+.conn{align-self:center;color:var(--muted);font-size:15px;line-height:1;padding:7px 0;transform:rotate(90deg)}
+
+/* the labeled turn between the authoring row and the gates row */
+.turn{display:flex;align-items:center;gap:10px;margin:2px 0;
+  font:500 10px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--steel)}
+.turn::before,.turn::after{content:"";height:1px;flex:1;background:var(--hair)}
+.turn b{font-weight:500}
+
+/* fuel motif */
+.dots{display:flex;gap:6px;align-items:center}
+.dots i{width:8px;height:8px;border-radius:50%;background:var(--ember-bright);display:block}
+.dots i:nth-child(2){opacity:.6} .dots i:nth-child(3){opacity:.32} .dots i:nth-child(4){opacity:.16}
+/* yield motif */
+.bars{display:flex;align-items:flex-end;gap:6px;height:46px}
+.bars i{width:13px;border-radius:3px 3px 0 0;background:var(--jade);display:block;transform-origin:bottom;transform:scaleY(0);animation:grow .9s cubic-bezier(.2,.7,.3,1) forwards}
+.bars i:nth-child(1){height:40%;background:var(--jade-soft);animation-delay:.05s}
+.bars i:nth-child(2){height:62%;background:var(--jade-bright);animation-delay:.18s}
+.bars i:nth-child(3){height:82%;background:var(--jade);animation-delay:.31s}
+.bars i:nth-child(4){height:100%;background:var(--jade);animation-delay:.44s}
+@keyframes grow{to{transform:scaleY(1)}}
+.feedback{margin:18px 2px 0;padding-top:15px;border-top:1px solid var(--hair-soft);
+  font-size:13px;color:var(--sub);line-height:1.55}
+.feedback b{color:var(--jade);font-weight:600}
+
+@media (min-width:720px){
+  .row{flex-direction:row;align-items:stretch}
+  .row .stage{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .fuel,.yield{flex-direction:column;text-align:center;gap:10px;flex:0 0 96px;justify-content:center}
+  .fuel .cap,.yield .cap{text-align:center}
+  .conn{transform:none;padding:0 4px;align-self:center}
+}
+/* break the loop out of the prose column so the diagram is the hero */
+@media (min-width:960px){
+  .loop,.foundation{width:calc(100% + 168px);margin-left:-84px}
+}
+
+/* ---- the foundation the loop stands on (colonnade) ---- */
+.foundation{margin-top:20px}
+.ground{font:italic 400 14.5px/1.5 var(--serif);color:var(--sub);margin:0 0 13px;text-align:center;text-wrap:balance}
+.colonnade{display:grid;grid-template-columns:repeat(auto-fit,minmax(134px,1fr));gap:10px}
+.pillar{background:var(--card);border:1px solid var(--hair);border-top:2px solid var(--steel);
+  border-radius:0 0 9px 9px;padding:12px 14px 13px}
+.pillar .pn{font:600 11px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--ink)}
+.pillar .pt{font-size:12px;line-height:1.5;color:var(--muted);margin-top:6px}
+
+/* ---- coordination band (the shared thread) ---- */
+.coord{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:22px 22px 20px}
+.snodes,.drops{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(10px,3vw,34px)}
+.snode{border:1px solid var(--hair);border-radius:10px;background:var(--paper);padding:10px 12px;text-align:center}
+.snode .sn{font:600 12px/1.2 var(--sans);color:var(--ink)}
+.snode .sw{font:500 10px/1 var(--mono);color:var(--muted);letter-spacing:.05em;margin-top:3px}
+.drop{justify-self:center;width:0;height:16px;border-left:1px dashed var(--steel);opacity:.55;margin:6px 0 0}
+.bus{margin-top:2px}
+.rail{margin-top:12px}
+.rail .rtop{display:flex;align-items:center;gap:12px}
+.rail .rlabel{font:600 11px/1 var(--mono);letter-spacing:.07em;text-transform:uppercase;color:var(--steel);white-space:nowrap}
+.rail .rline{flex:1;position:relative;height:0}
+.rail.slack .rline{border-top:1.5px dashed var(--steel)}
+.rail.pr .rline{border-top:1.5px solid var(--steel)}
+.rail .rline i{position:absolute;top:-4px;width:7px;height:7px;border-radius:2px;background:var(--card);border:1px solid var(--steel);display:block}
+.rail .rline i:nth-child(1){left:26%} .rail .rline i:nth-child(2){left:62%}
+.rail .rrole{font-size:12px;line-height:1.45;color:var(--muted);margin:6px 0 0}
+.rail .rrole b{color:var(--sub);font-weight:600}
+
+/* ---- spec-driven: the line runs on specs & plans first ---- */
+.passes{font-size:13.5px;line-height:1.8;color:var(--sub);margin:-8px 0 26px;max-width:66ch}
+.passes .p{font:600 11px var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--steel);border:1px solid var(--steel);border-radius:5px;padding:2px 7px}
+.passes .a{color:var(--muted);margin:0 4px}
+.passes b{color:var(--ink);font-weight:600}
+
+/* ---- capstone: the loop closes (feedback ring) ---- */
+.capstone{margin-top:60px;text-align:center}
+.capstone .kicker,.capstone .note{text-align:left}
+.capstone .note{margin-left:0}
+.ring{display:block;width:100%;max-width:356px;margin:10px auto 0}
+.ring .rt{font:600 12px var(--mono);fill:var(--ink);letter-spacing:.06em}
+.ring .rc{font:italic 500 15px var(--serif);fill:var(--ink)}
+.ring .rcs{font:400 10.5px var(--mono);fill:var(--muted);letter-spacing:.02em}
+.ringcap{text-align:center;font:400 12px/1.55 var(--mono);color:var(--muted);letter-spacing:.02em;margin:12px auto 0;max-width:54ch}
+
+/* ---- contrast ---- */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.col{border:1px solid var(--hair);border-radius:13px;background:var(--card);padding:20px 21px}
+.col.trap{border-color:color-mix(in srgb,var(--ember) 35%,var(--hair))}
+.col.craft{border-color:color-mix(in srgb,var(--jade) 40%,var(--hair))}
+.col h3{font:600 15px/1.3 var(--sans);margin:0 0 2px;display:flex;align-items:center;gap:9px}
+.col.trap h3{color:var(--ember)} .col.craft h3{color:var(--jade)}
+.col .sub{font-size:12px;color:var(--muted);margin:0 0 14px;font-family:var(--mono);letter-spacing:.04em}
+.col ul{margin:0;padding:0;list-style:none}
+.col li{font-size:14px;line-height:1.5;color:var(--sub);padding:8px 0 8px 22px;position:relative;border-top:1px solid var(--hair-soft)}
+.col li:first-of-type{border-top:none}
+.col li b{color:var(--ink);font-weight:600}
+.col.trap li::before{content:"\00D7";position:absolute;left:2px;top:8px;color:var(--ember);font-weight:600}
+.col.craft li::before{content:"\2192";position:absolute;left:2px;top:8px;color:var(--jade);font-weight:600}
+
+/* ---- compounds ---- */
+.assets{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.asset{border:1px solid var(--hair);border-radius:12px;background:var(--card);padding:17px 19px}
+.asset .n{font:600 14.5px var(--sans);color:var(--jade);margin:0 0 5px}
+.asset p{margin:0;font-size:13.5px;line-height:1.55;color:var(--sub)}
+.asset code{font:500 12px var(--mono);color:var(--ink);background:var(--jade-soft);padding:1px 5px;border-radius:4px}
+.assets-cap{margin:16px 2px 0;font:italic 400 14.5px/1.6 var(--serif);color:var(--ink)}
+
+/* ---- thesis ---- */
+.thesis{margin-top:64px;text-align:center;padding:0 10px}
+.thesis p{font:italic 400 22px/1.45 var(--serif);color:var(--ink);margin:0}
+.thesis .sub{font:400 14px/1.5 var(--sans);color:var(--sub);font-style:normal;margin-top:12px;letter-spacing:.01em}
+.handoff{text-align:center;margin:26px 0 0;font:500 13.5px/1.5 var(--sans)}
+.handoff a{color:var(--jade);text-decoration:none;border-bottom:1px solid transparent;padding-bottom:2px}
+.handoff a:hover{border-bottom-color:var(--jade)}
+
+footer{margin-top:56px;padding-top:18px;border-top:1px solid var(--hair);
+  display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacing:.05em}
+
+@media (max-width:560px){
+  .page{padding:40px 18px 56px}
+  h1{font-size:29px} h2{font-size:20px}
+  .two,.assets{grid-template-columns:1fr}
+  .thesis p{font-size:19px}
+}
+@media (prefers-reduced-motion:reduce){
+  .bars i{animation:none;transform:none}
+}
+</style>
+
+<div class="page">
+
+<header>
+  <p class="eyebrow">Pathfinders engineering &middot; how we build with AI</p>
+  <h1>Claude <span class="burn">burns the tokens</span>; the team <span class="gain">collects the XP</span></h1>
+  <p class="lede">We run Claude Code and GitHub Copilot as an assembly line, not an oracle. Coordinated AI sessions do the volume; <b>review gates and human judgment do the tempering.</b> Tokens are a cost we spend and forget &mdash; the craft they buy stays on the balance sheet.</p>
+</header>
+
+<section>
+  <p class="kicker">The loop</p>
+  <h2>Speed goes in one end; craft comes out the other</h2>
+  <p class="note">Every change runs the same line. Nothing an AI writes reaches <code>main</code> without passing an automated review and a human who owns the result.</p>
+  <p class="passes"><span class="p">spec</span><span class="a">&rarr;</span><span class="p">plan</span><span class="a">&rarr;</span><span class="p">build</span> &mdash; the line runs on each. A change starts as a brainstormed spec and a plan, each a <b>living draft PR</b>, Copilot-reviewed and gated before a line is written. <b>We design with the discipline we build with.</b></p>
+
+  <div class="loop">
+    <div class="flow">
+
+      <div class="row">
+        <div class="fuel">
+          <span class="dots"><i></i><i></i><i></i><i></i></span>
+          <span class="cap">tokens<span>the fuel, spent</span></span>
+        </div>
+        <div class="conn">&rarr;</div>
+        <div class="stage">
+          <div class="h"><span class="t">Claude Code sessions</span></div>
+          <div class="s">Parallel, worktree-isolated, each held to the evidence-before-output doctrine &mdash; no gap-filling, cite the source.</div>
+        </div>
+        <div class="conn">&rarr;</div>
+        <div class="stage">
+          <div class="h"><span class="t">Draft PR</span></div>
+          <div class="s">The engineer is the author of record &mdash; the work ships under their name, not the model's.</div>
+        </div>
+      </div>
+
+      <div class="turn"><b>then through the gates</b></div>
+
+      <div class="row">
+        <div class="stage gate">
+          <div class="h"><span class="t">GitHub Copilot review</span><span class="badge">gate</span></div>
+          <div class="s">Automated first pass on every draft &mdash; before a human spends a minute reading it.</div>
+          <div class="pyr"><b>&#9651;</b> unit &middot; integration &middot; e2e</div>
+        </div>
+        <div class="conn">&rarr;</div>
+        <div class="stage gate">
+          <div class="h"><span class="t">Engineer graduates it</span><span class="badge">gate</span></div>
+          <div class="s">Answers each comment, verifies the fix, then marks it ready. Reviewer of last resort.</div>
+        </div>
+        <div class="conn">&rarr;</div>
+        <div class="stage gate">
+          <div class="h"><span class="t">code-reviewers merge</span><span class="badge">gate</span></div>
+          <div class="s">A second human approves. Nobody merges their own work. Then it ships.</div>
+        </div>
+        <div class="conn">&rarr;</div>
+        <div class="yield">
+          <span class="bars"><i></i><i></i><i></i><i></i></span>
+          <span class="cap">craft<span>the asset, kept</span></span>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="feedback"><b>&#8617; The loop closes.</b> What each session learns becomes a promoted skill, a hardened doctrine note, a wiki runbook &mdash; so the next session starts smarter and the whole team levels with it.</p>
+  </div>
+
+  <div class="foundation">
+    <p class="ground">The loop holds because it stands on craft the AI didn't invent &mdash; and can't replace.</p>
+    <div class="colonnade">
+      <div class="pillar"><div class="pn">Clean code</div><div class="pt">refactoring &middot; readability</div></div>
+      <div class="pillar"><div class="pn">Architecture</div><div class="pt">well-architected &middot; balanced coupling</div></div>
+      <div class="pillar"><div class="pn">Delivery</div><div class="pt">devops &middot; gitops &middot; ci/cd</div></div>
+      <div class="pillar"><div class="pn">Tested</div><div class="pt">unit &middot; integration &middot; e2e</div></div>
+      <div class="pillar"><div class="pn">Iterative</div><div class="pt">build &middot; test &middot; ship &middot; learn</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">The shared thread</p>
+  <h2>Isolated, not siloed</h2>
+  <p class="note">Worktree-isolated sessions still move as one team. State and handoffs ride two shared channels &mdash; so no two sessions do the same work twice, and nothing's lost between them.</p>
+  <div class="coord">
+    <div class="snodes">
+      <div class="snode"><div class="sn">session</div><div class="sw">worktree a</div></div>
+      <div class="snode"><div class="sn">session</div><div class="sw">worktree b</div></div>
+      <div class="snode"><div class="sn">session</div><div class="sw">worktree c</div></div>
+    </div>
+    <div class="drops"><span class="drop"></span><span class="drop"></span><span class="drop"></span></div>
+    <div class="bus">
+      <div class="rail slack">
+        <div class="rtop"><span class="rlabel">Slack thread</span><span class="rline"><i></i><i></i></span></div>
+        <p class="rrole"><b>Fast, human-readable</b> &mdash; handoffs, shared state, announcements.</p>
+      </div>
+      <div class="rail pr">
+        <div class="rtop"><span class="rlabel">PR comments</span><span class="rline"><i></i><i></i></span></div>
+        <p class="rrole"><b>Durable, anchored to the diff</b> &mdash; decisions, SRE asks with their evidence, review.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">The distinction that matters</p>
+  <h2>Why this isn't vibe-coding</h2>
+  <p class="note">Vibe-coding is trusting the machine on a hunch and shipping what looks right. Same tools, opposite discipline &mdash; the gates are the whole difference.</p>
+  <div class="two">
+    <div class="col trap">
+      <h3>Vibe-coding</h3>
+      <p class="sub">spends heat, keeps nothing</p>
+      <ul>
+        <li>Accept the model's output on <b>vibes</b>; ship what reads plausibly</li>
+        <li>No evidence, no citation &mdash; <b>plausibility passes for proof</b></li>
+        <li>No review gate; the human is a rubber stamp</li>
+        <li>Fast today, <b>a mystery at 3am</b> &mdash; nothing was learned</li>
+      </ul>
+    </div>
+    <div class="col craft">
+      <h3>How Pathfinders runs it</h3>
+      <p class="sub">tempers heat into an edge</p>
+      <ul>
+        <li><b>Evidence before output</b> &mdash; every claim traces to code, a log, a query</li>
+        <li><b>Copilot reviews every draft PR</b> before a human reads it</li>
+        <li>The engineer <b>owns and can overrule</b> the model &mdash; never self-merge</li>
+        <li>Tests prove it; <b>code-reviewers gate main</b>. Speed stays honest</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker">The balance sheet</p>
+  <h2>What compounds</h2>
+  <p class="note">Tokens are a renewable cost &mdash; burned and gone. These four are what the spend actually buys, and they don't reset next sprint.</p>
+  <div class="assets">
+    <div class="asset">
+      <p class="n">Judgment</p>
+      <p>Engineers read, verify, and overrule the model. The skill that grows is knowing <em>when it's wrong</em> &mdash; the one thing a tool can't hand you.</p>
+    </div>
+    <div class="asset">
+      <p class="n">Skills</p>
+      <p>A personal Claude skill that proves itself graduates into the shared <code>ezrd</code> team plugin &mdash; one engineer's shortcut becomes everyone's.</p>
+    </div>
+    <div class="asset">
+      <p class="n">Doctrine</p>
+      <p>Hard-won gotchas land in <code>CLAUDE.md</code>. A trap that burned us once is a guardrail forever &mdash; nobody relearns it the hard way.</p>
+    </div>
+    <div class="asset">
+      <p class="n">Runbooks</p>
+      <p>The wiki captures the path once it's walked, so the next engineer covers in an hour what took the first one a day.</p>
+    </div>
+  </div>
+  <p class="assets-cap">Tokens are rented. Craft is owned.</p>
+</section>
+
+<section class="capstone">
+  <p class="kicker">The loop closes</p>
+  <h2>Tight cycles, no silos</h2>
+  <p class="note">Every shipped change feeds the next: production tells the truth, the team learns, and the learning is shared &mdash; so no knowledge stays trapped in one head or one session.</p>
+  <svg class="ring" viewBox="0 0 356 296" role="img" aria-label="A closed feedback cycle — ship, observe, learn, share — repeating so the team levels together with no silos and built-in redundancy">
+    <defs>
+      <marker id="rah" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+        <path d="M2 1 L8 5 L2 9" fill="none" stroke="var(--jade)" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+    <path d="M178 55 A95 95 0 0 1 272.1 136.8" fill="none" stroke="var(--jade)" stroke-width="1.5" marker-end="url(#rah)"/>
+    <path d="M273 150 A95 95 0 0 1 191.2 244.1" fill="none" stroke="var(--jade)" stroke-width="1.5" marker-end="url(#rah)"/>
+    <path d="M178 245 A95 95 0 0 1 83.9 163.2" fill="none" stroke="var(--jade)" stroke-width="1.5" marker-end="url(#rah)"/>
+    <path d="M83 150 A95 95 0 0 1 164.8 55.9" fill="none" stroke="var(--jade)" stroke-width="1.5" marker-end="url(#rah)"/>
+    <circle cx="178" cy="55" r="4.5" fill="var(--jade)"/>
+    <circle cx="273" cy="150" r="4.5" fill="var(--jade)"/>
+    <circle cx="178" cy="245" r="4.5" fill="var(--jade)"/>
+    <circle cx="83" cy="150" r="4.5" fill="var(--jade)"/>
+    <text x="178" y="40" text-anchor="middle" class="rt">SHIP</text>
+    <text x="288" y="154" text-anchor="start" class="rt">OBSERVE</text>
+    <text x="178" y="270" text-anchor="middle" class="rt">LEARN</text>
+    <text x="68" y="154" text-anchor="end" class="rt">SHARE</text>
+    <text x="178" y="144" text-anchor="middle" class="rc">the team levels</text>
+    <text x="178" y="164" text-anchor="middle" class="rc">together</text>
+    <text x="178" y="185" text-anchor="middle" class="rcs">no silos &#183; redundancy</text>
+  </svg>
+  <p class="ringcap">Watched with Datadog monitors kept in Terraform &#183; shipped by GitHub Actions and chatops.</p>
+</section>
+
+<div class="thesis">
+  <p>Claude burns the tokens; the team collects the XP.</p>
+  <p class="sub">The line accelerates the work &mdash; the gates make sure we get sharper doing it, not softer.</p>
+</div>
+
+<p class="handoff"><a href="playbook.html" target="_blank" rel="noopener">Running this on your team? &rarr; The playbook</a></p>
+
+<footer>
+  <p>Pathfinders engineering &middot; 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
