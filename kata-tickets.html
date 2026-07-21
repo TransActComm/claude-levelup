@@ -61,11 +61,15 @@ section{margin-top:56px}
 h2{font:600 23px/1.25 var(--serif);margin:0 0 6px;text-wrap:balance}
 .note{color:var(--sub);font-size:15px;line-height:1.6;margin:0 0 22px;max-width:66ch}
 code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;border-radius:4px}
+.ico{flex:none;display:inline-block;vertical-align:middle}
 
 /* ---- the brief ---- */
 .brief{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:22px 24px}
+.brief .bhead{display:flex;align-items:center;gap:15px;margin:0 0 13px}
+.brief .bdev{flex:none;width:44px;height:44px;color:var(--steel)}
+.brief .btxt{min-width:0}
 .brief .bt{font:600 20px/1.2 var(--serif);color:var(--ink);margin:0 0 3px}
-.brief .bo{font:500 11px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.brief .bo{font:500 11px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0}
 .brief p{font-size:14px;line-height:1.6;color:var(--sub);margin:0 0 14px}
 .brief .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:4px}
 .brief h4{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 8px}
@@ -87,7 +91,8 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
 /* ---- two styles weighed ---- */
 .versus{display:grid;grid-template-columns:1fr 1fr;gap:16px}
 .style{border:1px solid var(--hair);border-top:2px solid var(--steel);border-radius:0 0 14px 14px;background:var(--card);padding:17px 19px}
-.style .sh{font:600 16px/1.25 var(--serif);color:var(--ink);margin:0 0 3px}
+.style .sh{display:flex;align-items:center;gap:8px;font:600 16px/1.25 var(--serif);color:var(--ink);margin:0 0 3px}
+.style .sh .ico{width:18px;height:18px;color:var(--steel)}
 .style .so{font:500 11px/1.45 var(--mono);letter-spacing:.02em;color:var(--muted);margin:0 0 12px}
 .style .r{padding:9px 0;border-top:1px solid var(--hair-soft)}
 .style .r:first-of-type{border-top:none}
@@ -106,6 +111,10 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
 .flowc{display:flex;flex-direction:column;gap:0;margin:4px 0 16px}
 .fnode{border:1px solid var(--hair);border-radius:10px;background:var(--paper);padding:11px 13px;font-size:12px;line-height:1.35;color:var(--ink);font-weight:600}
 .fnode span{color:var(--muted);font-size:11px;font-weight:400;display:block;margin-top:2px}
+.fnode .ft{display:flex;align-items:center;gap:6px;color:var(--ink);font-size:12px;font-weight:600;margin-top:0}
+.fnode .ft .ico{width:15px;height:15px;color:var(--steel)}
+.fnode.gate .ft .ico{color:var(--ember)}
+.fnode.core .ft .ico{color:var(--jade)}
 .fnode.gate{border-color:var(--ember);background:var(--ember-soft)}
 .fnode.core{border-color:var(--jade);background:var(--jade-soft)}
 .fconn{align-self:center;color:var(--muted);font-size:14px;padding:6px 0;transform:rotate(90deg)}
@@ -157,8 +166,16 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
   <p class="kicker">The brief, as drawn</p>
   <h2>What the dice rolled</h2>
   <div class="brief">
-    <p class="bt">Concert Comparison</p>
-    <p class="bo">a high-volume concert ticketing site</p>
+    <div class="bhead">
+      <svg class="bdev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3.5 8.4a1.7 1.7 0 0 1 1.7-1.7h13.6a1.7 1.7 0 0 1 1.7 1.7v1.9a1.7 1.7 0 0 0 0 3.4v1.9a1.7 1.7 0 0 1-1.7 1.7H5.2a1.7 1.7 0 0 1-1.7-1.7v-1.9a1.7 1.7 0 0 0 0-3.4z"/>
+        <path d="M14.4 6.9v10.2" stroke-dasharray="1.4 2.2"/>
+      </svg>
+      <div class="btxt">
+        <p class="bt">Concert Comparison</p>
+        <p class="bo">a high-volume concert ticketing site</p>
+      </div>
+    </div>
     <p>A ticketing site for big acts needs an <b>elastic</b> solution to sell tickets &mdash; steady most of the year, then a wall of traffic the second seats go on sale.</p>
     <div class="cols">
       <div>
@@ -215,7 +232,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
   <div class="versus">
 
     <div class="style">
-      <p class="sh">Space-Based</p>
+      <p class="sh"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="14" y="3.5" width="6.5" height="6.5" rx="1.2"/><rect x="3.5" y="14" width="6.5" height="6.5" rx="1.2"/><rect x="14" y="14" width="6.5" height="6.5" rx="1.2"/><path d="M10 6.75h4M10 17.25h4M6.75 10v4M17.25 10v4"/></svg>Space-Based</p>
       <p class="so">in-memory data grid, no shared DB on the hot path; scale by adding processing units; persist write-behind</p>
       <div class="r">
         <p class="rl">The 10k/sec spike</p>
@@ -232,7 +249,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
     </div>
 
     <div class="style">
-      <p class="sh">Microservices</p>
+      <p class="sh"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="9" width="6" height="6" rx="1.4"/><rect x="15.5" y="3.5" width="6" height="6" rx="1.4"/><rect x="15.5" y="14.5" width="6" height="6" rx="1.4"/><path d="M8.5 12h3.5M12 12l3.5-5M12 12l3.5 5"/></svg>Microservices</p>
       <p class="so">catalog, seat-inventory, order/payment, notification as independent services; scale and deploy each on its own</p>
       <div class="r">
         <p class="rl">The 10k/sec spike</p>
@@ -253,11 +270,11 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
   <div class="verdict">
     <p class="vh">The call: neither, whole. Take the seam each wins.</p>
     <div class="flowc">
-      <div class="fnode gate">Admission gate<span>queue + load-shed the spike</span></div>
+      <div class="fnode gate"><span class="ft"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 5h18l-6.8 7.8v5.6l-4.4-2.2v-3.4z"/></svg>Admission gate</span><span>queue + load-shed the spike</span></div>
       <div class="fconn">&rarr;</div>
-      <div class="fnode core">Seat grid<span>in-memory, one owner per seat</span></div>
+      <div class="fnode core"><span class="ft"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9.7h17M3.5 15.3h17M9.7 3.5v17M15.3 3.5v17"/></svg>Seat grid</span><span>in-memory, one owner per seat</span></div>
       <div class="fconn">&rarr;</div>
-      <div class="fnode">Order &amp; pay<span>ordinary services, saga</span></div>
+      <div class="fnode"><span class="ft"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2.5" y="5.5" width="19" height="13" rx="2"/><path d="M2.5 9.5h19M6 14.5h4"/></svg>Order &amp; pay</span><span>ordinary services, saga</span></div>
     </div>
     <p>The forces point different ways, so the design does too. The <b class="jade">no-oversell hot path</b> takes the Space-Based idea &mdash; an in-memory, per-event seat grid with a single owner per seat &mdash; because that's what survives 10k/sec without a database bottleneck. Everything calmer (catalog, payments, notifications, post-purchase) stays <b>ordinary microservices</b>, where independent deploy and team familiarity win. Browse "remaining seats" reads from a <b>cache</b>, deliberately off the hot path.</p>
     <p>The real unlock isn't the style at all &mdash; it's the <b>admission gate</b> in front: a virtual waiting room that <b>sheds and queues</b> load so only what the invariant can safely handle reaches it. Elasticity isn't infinite; you protect correctness by controlling what gets in. Same rule we live by on our own platform &mdash; <b>load-shed over retry-storms</b>.</p>
