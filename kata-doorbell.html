@@ -61,11 +61,15 @@ section{margin-top:56px}
 h2{font:600 23px/1.25 var(--serif);margin:0 0 6px;text-wrap:balance}
 .note{color:var(--sub);font-size:15px;line-height:1.6;margin:0 0 22px;max-width:66ch}
 code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;border-radius:4px}
+.ico{flex:none;display:inline-block;vertical-align:middle}
 
 /* ---- the brief ---- */
 .brief{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:22px 24px}
+.brief .bhead{display:flex;align-items:center;gap:15px;margin:0 0 13px}
+.brief .bdev{flex:none;width:46px;height:46px;color:var(--steel)}
+.brief .btxt{min-width:0}
 .brief .bt{font:600 20px/1.2 var(--serif);color:var(--ink);margin:0 0 3px}
-.brief .bo{font:500 11px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.brief .bo{font:500 11px/1.3 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0}
 .brief p{font-size:14px;line-height:1.6;color:var(--sub);margin:0 0 14px}
 .brief .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:4px}
 .brief h4{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 8px}
@@ -86,7 +90,8 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
 /* ---- decisions (lenses) ---- */
 .decisions{display:grid;grid-template-columns:1fr 1fr;gap:15px}
 .dec{border:1px solid var(--hair);border-top:2px solid var(--steel);border-radius:0 0 12px 12px;background:var(--card);padding:15px 17px}
-.dec .lens{font:600 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 8px}
+.dec .lens{display:flex;align-items:center;gap:6px;font:600 10px/1.2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 8px}
+.dec .lens .ico{width:16px;height:16px}
 .dec .dt{font:600 15.5px/1.3 var(--serif);color:var(--ink);margin:0 0 6px}
 .dec .dd{font-size:13px;line-height:1.55;color:var(--sub);margin:0}
 .dec .dd b{color:var(--ink);font-weight:600}
@@ -97,7 +102,8 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
 .arch{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:24px 22px}
 .zones{display:flex;flex-direction:column;gap:0;align-items:stretch}
 .zone{border:1px solid var(--hair);border-radius:11px;background:var(--paper);padding:14px 16px}
-.zone .zn{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 10px}
+.zone .zn{display:flex;align-items:center;gap:8px;font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 10px}
+.zone .zn .ico{width:18px;height:18px}
 .zone ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
 .zone li{font-size:12.5px;line-height:1.4;color:var(--ink)}
 .zone li span{color:var(--muted);font-size:11.5px}
@@ -170,8 +176,19 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
   <p class="kicker">The brief, as drawn</p>
   <h2>What the dice rolled</h2>
   <div class="brief">
-    <p class="bt">Ding, Dong!</p>
-    <p class="bo">a wifi doorbell + camera &middot; device, cloud, and phone app</p>
+    <div class="bhead">
+      <svg class="bdev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="6.5" y="2.5" width="11" height="19" rx="3.2"/>
+        <circle cx="12" cy="8" r="2.6"/><circle cx="12" cy="8" r=".6" fill="currentColor" stroke="none"/>
+        <circle cx="12" cy="15.5" r="1.5"/>
+        <path d="M18.6 5.4a4 4 0 0 1 0 5.2" opacity=".5"/>
+        <path d="M20.4 3.8a6.4 6.4 0 0 1 0 8.4" opacity=".28"/>
+      </svg>
+      <div class="btxt">
+        <p class="bt">Ding, Dong!</p>
+        <p class="bo">a wifi doorbell + camera &middot; device, cloud, and phone app</p>
+      </div>
+    </div>
     <p>A wifi-connected doorbell and camera. Notify people on their phone when someone's at the door &mdash; even before the button is pressed. Tell a delivery driver to leave the parcel; keep a 24/7 record of anyone snooping. You design the <b>device software</b> and the <b>web services</b> that link it all back to the app.</p>
     <div class="cols">
       <div>
@@ -233,35 +250,35 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
   <div class="decisions">
 
     <div class="dec">
-      <p class="lens">Balanced coupling &middot; reliability</p>
+      <p class="lens"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.5 14.5l5-5"/><path d="M11 7l1-1a3.7 3.7 0 0 1 5.2 5.2l-1 1"/><path d="M13 17l-1 1a3.7 3.7 0 0 1-5.2-5.2l1-1"/></svg>Balanced coupling &middot; reliability</p>
       <p class="dt">The ring is local; the cloud is best-effort</p>
       <p class="dd">Button interrupt &rarr; ROM sound, entirely on-device. Notify, stream, and record are all best-effort on top. The core function is <b>severed from the network</b> by design.</p>
       <p class="tradeoff"><b>Trade-off:</b> the doorbell always chimes, even when every service is down &mdash; the same "core survives its dependencies" rule we chaos-test our own services against.</p>
     </div>
 
     <div class="dec">
-      <p class="lens">Trade-off analysis &middot; the Hard Parts</p>
+      <p class="lens"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5" cy="12" r="1.9"/><circle cx="17.5" cy="6.5" r="1.9"/><circle cx="17.5" cy="17.5" r="1.9"/><path d="M6.8 12h3.4"/><path d="M10.2 12l5.5-4.6"/><path d="M10.2 12l5.5 4.6"/></svg>Trade-off analysis &middot; the Hard Parts</p>
       <p class="dt">Split notifications from media</p>
       <p class="dd">Notifications are tiny and high-fan-out; media is heavy and low-fan-out. They scale, fail, and cost differently, so they're <b>separate services behind a contract</b>, not one endpoint.</p>
       <p class="tradeoff"><b>Trade-off:</b> two services plus a contract, versus one bottleneck that a video stream can starve of notification capacity.</p>
     </div>
 
     <div class="dec">
-      <p class="lens">Architect elevator &middot; cost / latency</p>
+      <p class="lens"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v16"/><path d="M8 8l4-4 4 4"/><path d="M8 16l4 4 4-4"/></svg>Architect elevator &middot; cost / latency</p>
       <p class="dt">Streams go peer-to-peer; the cloud only introduces them</p>
       <p class="dd">Two-way audio can't afford a cloud round-trip. WebRTC connects app and device <b>directly</b>; the cloud handles signaling and a relay only as fallback.</p>
       <p class="tradeoff"><b>Trade-off:</b> NAT-traversal complexity, bought back in latency and bandwidth cost &mdash; and reversible: fall back to relay if P2P fails.</p>
     </div>
 
     <div class="dec">
-      <p class="lens">Well-Architected &middot; cost, privacy, sustainability</p>
+      <p class="lens"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l7 2.8v5.2c0 4.4-3 7.4-7 8.9-4-1.5-7-4.5-7-8.9V5.8z"/></svg>Well-Architected &middot; cost, privacy, sustainability</p>
       <p class="dt">Detect motion at the edge, not in the cloud</p>
       <p class="dd">The device pre-filters motion and only uploads <b>candidate events</b>, not a 24/7 feed. The cloud confirms and records what matters.</p>
       <p class="tradeoff"><b>Trade-off:</b> squeezing inference onto constrained hardware, versus a bandwidth, storage, and privacy bill that grows with every camera-hour.</p>
     </div>
 
     <div class="dec">
-      <p class="lens">Well-Architected &middot; security</p>
+      <p class="lens"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="10.5" width="14" height="9.5" rx="2.2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/></svg>Well-Architected &middot; security</p>
       <p class="dt">Treat onboarding as the sharpest edge</p>
       <p class="dd">The open-AP window is short-lived, gated by an <b>out-of-band secret</b> (a code on the device / the needle reset), and credentials are encrypted even over the open link.</p>
       <p class="tradeoff"><b>Trade-off:</b> a few seconds of onboarding friction, versus leaving an unauthenticated door into the customer's home network.</p>
@@ -278,7 +295,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
     <div class="zones">
 
       <div class="zone">
-        <p class="zn">Device (firmware)</p>
+        <p class="zn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7.5" y="7.5" width="9" height="9" rx="1.6"/><path d="M10 4.5v3M14 4.5v3M10 16.5v3M14 16.5v3M4.5 10h3M4.5 14h3M16.5 10h3M16.5 14h3"/></svg>Device (firmware)</p>
         <ul>
           <li class="local">Button &rarr; ROM ring <span>&mdash; local, offline, no cloud</span></li>
           <li>Wifi state machine <span>&mdash; host (onboard) &harr; client</span></li>
@@ -290,7 +307,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
       <div class="aconn">&rarr;<br>versioned contract<br>(MQTT / HTTPS)</div>
 
       <div class="zone">
-        <p class="zn">Cloud (services)</p>
+        <p class="zn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7.5 18.5a4 4 0 0 1-.4-8A5.2 5.2 0 0 1 17 9.2a3.6 3.6 0 0 1-.4 9.3z"/></svg>Cloud (services)</p>
         <ul>
           <li>Device registry &amp; gateway <span>&mdash; pairing, commands</span></li>
           <li>Notification service <span>&mdash; push fan-out</span></li>
@@ -301,7 +318,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
       <div class="aconn">&rarr;<br>push +<br>WebRTC media</div>
 
       <div class="zone">
-        <p class="zn">App (phone)</p>
+        <p class="zn"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2.5" width="10" height="19" rx="2.6"/><path d="M10.5 18.5h3"/></svg>App (phone)</p>
         <ul>
           <li>Notifications <span>&mdash; button &amp; motion</span></li>
           <li>Live view + two-way audio</li>
