@@ -99,6 +99,8 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
 .refgroup li{font-size:13px;line-height:1.45;color:var(--ink);padding:9px 0;border-top:1px solid var(--hair-soft)}
 .refgroup li:first-of-type{border-top:none}
 .refgroup li span{color:var(--muted);display:block;font-size:12px;line-height:1.45;margin-top:2px}
+.refgroup a{color:var(--jade);text-decoration:none;border-bottom:1px solid transparent}
+.refgroup a:hover{border-bottom-color:var(--jade)}
 
 .closing{margin-top:56px;padding:20px 22px;border:1px solid var(--hair);border-radius:14px;background:var(--card)}
 .closing p{margin:0;font:italic 400 16px/1.55 var(--serif);color:var(--ink)}
@@ -119,7 +121,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
 
 <div class="page">
 
-<a class="backlink" href="index.html" target="_blank" rel="noopener">&larr; back to the argument</a>
+<a class="backlink" href="index.html">&larr; back to the argument</a>
 
 <header>
   <p class="eyebrow">Pathfinders engineering &middot; the playbook</p>
@@ -209,7 +211,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
     <div class="refgroup">
       <h3>Architecture &amp; design</h3>
       <ul>
-        <li>Vlad Khononov &mdash; <em>Balanced Coupling</em><span>Assess a seam on strength, distance, volatility. Decompose only where it converts a strong cross-deployable seam into a contract.</span></li>
+        <li>Vlad Khononov &mdash; <em>Balancing Coupling in Software Design</em><span>Assess a seam on strength, distance, volatility. Decompose only where it converts a strong cross-deployable seam into a contract.</span></li>
         <li>Richards &amp; Ford &mdash; <em>Software Architecture: The Hard Parts</em><span>No best practices, only trade-offs. Disintegrators vs. integrators; govern with fitness functions.</span></li>
         <li>Gregor Hohpe &mdash; <em>The Software Architect Elevator</em><span>Ride between strategy and the engine room. Architecture is selling options.</span></li>
         <li>AWS Well-Architected Framework<span>Six pillars. Surface which one a change trades against.</span></li>
@@ -226,8 +228,8 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
     <div class="refgroup">
       <h3>The tooling</h3>
       <ul>
-        <li>Claude Code<span>The agentic CLI the sessions run in.</span></li>
-        <li>GitHub Copilot code review<span>The automated first pass on every draft PR.</span></li>
+        <li><a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a><span>The agentic CLI the sessions run in.</span></li>
+        <li><a href="https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review" target="_blank" rel="noopener">GitHub Copilot code review</a><span>The automated first pass on every draft PR.</span></li>
         <li>Superpowers<span>The spec-driven brainstorm &rarr; plan &rarr; execute workflow.</span></li>
         <li>Team skills &amp; plugins<span>Platform workflows promoted from one engineer's shortcut into everyone's.</span></li>
       </ul>
@@ -237,7 +239,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
 
 <div class="closing">
   <p>Tokens are rented. Craft is owned.</p>
-  <p class="cta">The full argument, and the loop it comes from, live in <a href="index.html" target="_blank" rel="noopener">Claude burns the tokens; the team collects the XP</a>.</p>
+  <p class="cta">The full argument, and the loop it comes from, live in <a href="index.html">Claude burns the tokens; the team collects the XP</a>.</p>
 </div>
 
 <footer>
