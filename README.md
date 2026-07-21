@@ -4,5 +4,6 @@ How Pathfinders runs coordinated Claude Code sessions through GitHub Copilot rev
 
 - **The argument** — [`index.html`](index.html): *Claude burns the tokens; the team collects the XP.*
 - **The playbook** — [`playbook.html`](playbook.html): two worked scenarios, the kit to run it on your team, and the references behind the practice.
+- **The method in action** — [`kata.html`](kata.html): a random architecture kata (drawn from architecturalkatas.com) run through the lenses and the loop end-to-end.
 
-Two self-contained static pages (no build, no dependencies). Published via GitHub Pages.
+Three self-contained static pages (no build, no dependencies). Published via GitHub Pages.

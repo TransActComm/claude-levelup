@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>One random problem, the whole method — an architecture kata</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 100 100%27><text y=%27.9em%27 font-size=%2790%27>⚒️</text></svg>">
+<style>
+:root{
+  --paper:#F3F6F4; --card:#FFFFFF; --ink:#16201C; --sub:#46534D; --muted:#5E6963;
+  --hair:#E0E5E1; --hair-soft:#EBEFEB;
+  --ember:#C2410C; --ember-bright:#E2611B; --ember-soft:#F7ECE4;
+  --jade:#0E6E54; --jade-bright:#1E9C77; --jade-soft:#E1F2EB;
+  --steel:#3E5C76; --steel-soft:#E7ECF1;
+}
+@media (prefers-color-scheme:dark){
+  :root{
+    --paper:#0F1311; --card:#181C19; --ink:#ECF0ED; --sub:#AFB7B1; --muted:#7B857E;
+    --hair:#262B27; --hair-soft:#1F241F;
+    --ember:#E2611B; --ember-bright:#F1793A; --ember-soft:#26150C;
+    --jade:#3FB791; --jade-bright:#57C9A5; --jade-soft:#0C2A22;
+    --steel:#7F9BB5; --steel-soft:#152029;
+  }
+}
+:root[data-theme="light"]{
+  --paper:#F3F6F4; --card:#FFFFFF; --ink:#16201C; --sub:#46534D; --muted:#5E6963;
+  --hair:#E0E5E1; --hair-soft:#EBEFEB;
+  --ember:#C2410C; --ember-bright:#E2611B; --ember-soft:#F7ECE4;
+  --jade:#0E6E54; --jade-bright:#1E9C77; --jade-soft:#E1F2EB;
+  --steel:#3E5C76; --steel-soft:#E7ECF1;
+}
+:root[data-theme="dark"]{
+  --paper:#0F1311; --card:#181C19; --ink:#ECF0ED; --sub:#AFB7B1; --muted:#7B857E;
+  --hair:#262B27; --hair-soft:#1F241F;
+  --ember:#E2611B; --ember-bright:#F1793A; --ember-soft:#26150C;
+  --jade:#3FB791; --jade-bright:#57C9A5; --jade-soft:#0C2A22;
+  --steel:#7F9BB5; --steel-soft:#152029;
+}
+
+*{box-sizing:border-box}
+:root{
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",system-ui,Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font:400 16px/1.66 var(--sans);-webkit-font-smoothing:antialiased}
+.page{max-width:820px;margin:0 auto;padding:52px 30px 76px}
+
+.backlink{display:inline-flex;align-items:center;gap:6px;font:500 12px/1 var(--mono);letter-spacing:.03em;
+  color:var(--jade);text-decoration:none;margin:0 0 26px;padding-bottom:2px;border-bottom:1px solid transparent}
+.backlink:hover{border-bottom-color:var(--jade)}
+.eyebrow{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 16px}
+h1{font:600 35px/1.16 var(--serif);letter-spacing:-.01em;margin:0 0 14px;text-wrap:balance}
+.lede{color:var(--sub);font-size:17px;line-height:1.6;max-width:62ch;margin:0}
+.lede b{color:var(--ink);font-weight:600}
+
+section{margin-top:56px}
+.kicker{font:500 11px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--muted);margin:0 0 7px}
+.kicker .step{color:var(--jade)}
+h2{font:600 23px/1.25 var(--serif);margin:0 0 6px;text-wrap:balance}
+.note{color:var(--sub);font-size:15px;line-height:1.6;margin:0 0 22px;max-width:66ch}
+code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;border-radius:4px}
+
+/* ---- the brief ---- */
+.brief{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:22px 24px}
+.brief .bt{font:600 20px/1.2 var(--serif);color:var(--ink);margin:0 0 3px}
+.brief .bo{font:500 11px/1 var(--mono);letter-spacing:.05em;text-transform:uppercase;color:var(--muted);margin:0 0 12px}
+.brief p{font-size:14px;line-height:1.6;color:var(--sub);margin:0 0 14px}
+.brief .cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:4px}
+.brief h4{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 8px}
+.brief ul{margin:0;padding:0;list-style:none}
+.brief li{font-size:12.5px;line-height:1.5;color:var(--sub);padding:4px 0 4px 15px;position:relative}
+.brief li::before{content:"\2013";position:absolute;left:0;color:var(--muted)}
+.brief .src{margin:16px 0 0;font:400 11px/1.4 var(--mono);color:var(--muted);letter-spacing:.02em}
+.brief .src a{color:var(--jade);text-decoration:none;border-bottom:1px solid transparent}
+.brief .src a:hover{border-bottom-color:var(--jade)}
+
+/* ---- clarify ---- */
+.clarify{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.q{border:1px solid var(--hair);border-radius:12px;background:var(--card);padding:15px 17px}
+.q .qq{font-weight:600;font-size:14px;color:var(--ink);line-height:1.4}
+.q .qa{font-size:13px;line-height:1.5;color:var(--sub);margin-top:6px}
+.q .qa b{color:var(--ink);font-weight:600}
+
+/* ---- decisions (lenses) ---- */
+.decisions{display:grid;grid-template-columns:1fr 1fr;gap:15px}
+.dec{border:1px solid var(--hair);border-top:2px solid var(--steel);border-radius:0 0 12px 12px;background:var(--card);padding:15px 17px}
+.dec .lens{font:600 10px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 8px}
+.dec .dt{font:600 15.5px/1.3 var(--serif);color:var(--ink);margin:0 0 6px}
+.dec .dd{font-size:13px;line-height:1.55;color:var(--sub);margin:0}
+.dec .dd b{color:var(--ink);font-weight:600}
+.dec .tradeoff{font-size:12px;line-height:1.5;color:var(--muted);margin:9px 0 0;padding-top:9px;border-top:1px solid var(--hair-soft)}
+.dec .tradeoff b{color:var(--sub);font-weight:600}
+
+/* ---- architecture ---- */
+.arch{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:24px 22px}
+.zones{display:flex;flex-direction:column;gap:0;align-items:stretch}
+.zone{border:1px solid var(--hair);border-radius:11px;background:var(--paper);padding:14px 16px}
+.zone .zn{font:600 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--steel);margin:0 0 10px}
+.zone ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px}
+.zone li{font-size:12.5px;line-height:1.4;color:var(--ink)}
+.zone li span{color:var(--muted);font-size:11.5px}
+.zone li.local{color:var(--jade);font-weight:600}
+.zone li.risk{color:var(--ember);font-weight:600}
+.aconn{align-self:center;color:var(--muted);font:500 10px/1.3 var(--mono);letter-spacing:.03em;
+  text-align:center;padding:9px 0;transform:rotate(90deg);white-space:nowrap}
+.aconn.risk{color:var(--ember)}
+@media (min-width:720px){
+  .zones{flex-direction:row;align-items:stretch}
+  .zone{flex:1;display:flex;flex-direction:column}
+  .aconn{transform:none;padding:0 6px;align-self:center;max-width:120px;white-space:normal}
+}
+.archkey{display:flex;flex-wrap:wrap;gap:16px;margin:18px 2px 0;padding-top:15px;border-top:1px solid var(--hair-soft);
+  font:500 11px/1.3 var(--mono);letter-spacing:.02em;color:var(--muted)}
+.archkey i{font-style:normal;display:inline-flex;align-items:center;gap:6px}
+.archkey .sw{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+/* ---- build / loop ---- */
+.build{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:20px 22px}
+.build .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 14px}
+.lane{border:1px solid var(--hair);border-radius:10px;background:var(--paper);padding:12px 14px}
+.lane .ln{font:600 12px/1.2 var(--sans);color:var(--ink)}
+.lane .lw{font:500 10px/1 var(--mono);color:var(--muted);letter-spacing:.04em;margin-top:3px}
+.build p{font-size:13.5px;line-height:1.6;color:var(--sub);margin:0}
+.build p b{color:var(--ink);font-weight:600}
+
+/* ---- close ---- */
+.close{margin-top:56px;padding:22px;border:1px solid var(--hair);border-radius:14px;background:var(--card);text-align:center}
+.close p{margin:0;font:italic 400 17px/1.5 var(--serif);color:var(--ink)}
+.close .cta{font-style:normal;font:500 13px/1.5 var(--sans);color:var(--sub);margin-top:12px}
+.close a{color:var(--jade);text-decoration:none;border-bottom:1px solid transparent}
+.close a:hover{border-bottom-color:var(--jade)}
+
+footer{margin-top:48px;padding-top:18px;border-top:1px solid var(--hair)}
+footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacing:.05em}
+
+@media (max-width:600px){
+  .page{padding:36px 18px 56px}
+  h1{font-size:28px} h2{font-size:20px}
+  .brief .cols,.clarify,.decisions{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<a class="backlink" href="playbook.html">&larr; the playbook</a>
+
+<header>
+  <p class="eyebrow">Pathwise engineering &middot; the method in action</p>
+  <h1>One random problem, the whole method</h1>
+  <p class="lede">Talk is cheap, so here's the loop working. We pulled a <b>random architecture kata</b> off the internet, sight unseen, and ran it through the same lenses and gates we use on real work. No cherry-picking &mdash; whatever the dice rolled.</p>
+</header>
+
+<section>
+  <p class="kicker">The brief, as drawn</p>
+  <h2>What the dice rolled</h2>
+  <div class="brief">
+    <p class="bt">Ding, Dong!</p>
+    <p class="bo">a wifi doorbell + camera &middot; device, cloud, and phone app</p>
+    <p>A wifi-connected doorbell and camera. Notify people on their phone when someone's at the door &mdash; even before the button is pressed. Tell a delivery driver to leave the parcel; keep a 24/7 record of anyone snooping. You design the <b>device software</b> and the <b>web services</b> that link it all back to the app.</p>
+    <div class="cols">
+      <div>
+        <h4>Backlog (what it must do)</h4>
+        <ul>
+          <li>Ring loudly on button press</li>
+          <li>Notify the app the instant the button is pushed</li>
+          <li>Two-way audio + video once the ring is answered</li>
+          <li>Detect movement and notify before anyone rings</li>
+          <li>Record video + audio of a movement event</li>
+          <li>Let the app trigger a loud alarm</li>
+          <li>Onboard wifi credentials; change the password</li>
+        </ul>
+      </div>
+      <div>
+        <h4>The hardware you're handed</h4>
+        <ul>
+          <li>Wifi: host an <b>open</b> AP, or join a secure one</li>
+          <li>Video: stream to a web service</li>
+          <li>Audio: two-way stream to a web service</li>
+          <li>A button-press interrupt</li>
+          <li>Ring sounds baked into ROM</li>
+          <li>A needle-press reset button</li>
+        </ul>
+      </div>
+    </div>
+    <p class="src">Kata: <a href="https://www.architecturalkatas.com/" target="_blank" rel="noopener">architecturalkatas.com</a> &middot; &copy; Neward &amp; Associates. Drawn at random, unedited.</p>
+  </div>
+</section>
+
+<section>
+  <p class="kicker"><span class="step">Step 1</span> &middot; before a line of design</p>
+  <h2>Clarify, don't gap-fill</h2>
+  <p class="note">Evidence before output means naming what the brief doesn't say instead of quietly inventing it. Four questions decide most of the architecture &mdash; so they get asked first, not assumed.</p>
+  <div class="clarify">
+    <div class="q">
+      <div class="qq">What happens when the network is down?</div>
+      <div class="qa">The brief is silent. We <b>assume the ring must still work offline</b> &mdash; a doorbell that needs the cloud to chime is a broken doorbell. That single assumption reshapes the whole device design.</div>
+    </div>
+    <div class="q">
+      <div class="qq">Who watches the 24/7 video?</div>
+      <div class="qa">"Stream video to a service to detect movement" reads as always-on upload. That's a <b>cost, privacy, and bandwidth bomb</b>. We flag it and design around it rather than build it literally.</div>
+    </div>
+    <div class="q">
+      <div class="qq">How secure is the onboarding window?</div>
+      <div class="qa">The device hosts an <b>open</b> access point to receive wifi credentials. That's an unauthenticated door into someone's home network. Named up front as the sharpest edge.</div>
+    </div>
+    <div class="q">
+      <div class="qq">How real-time is "two-way audio"?</div>
+      <div class="qa">A conversation needs sub-second latency; a recording doesn't. <b>Treating them as one "media" feature would over- or under-build both.</b> They're different problems.</div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker"><span class="step">Step 2</span> &middot; the decisions that matter</p>
+  <h2>Five calls, through the lenses</h2>
+  <p class="note">Not "best practices" &mdash; trade-offs, each named with the force it answers to. The lens in the corner is the tool that made the call.</p>
+  <div class="decisions">
+
+    <div class="dec">
+      <p class="lens">Balanced coupling &middot; reliability</p>
+      <p class="dt">The ring is local; the cloud is best-effort</p>
+      <p class="dd">Button interrupt &rarr; ROM sound, entirely on-device. Notify, stream, and record are all best-effort on top. The core function is <b>severed from the network</b> by design.</p>
+      <p class="tradeoff"><b>Trade-off:</b> the doorbell always chimes, even when every service is down &mdash; the same "core survives its dependencies" rule we chaos-test our own services against.</p>
+    </div>
+
+    <div class="dec">
+      <p class="lens">Trade-off analysis &middot; the Hard Parts</p>
+      <p class="dt">Split notifications from media</p>
+      <p class="dd">Notifications are tiny and high-fan-out; media is heavy and low-fan-out. They scale, fail, and cost differently, so they're <b>separate services behind a contract</b>, not one endpoint.</p>
+      <p class="tradeoff"><b>Trade-off:</b> two services plus a contract, versus one bottleneck that a video stream can starve of notification capacity.</p>
+    </div>
+
+    <div class="dec">
+      <p class="lens">Architect elevator &middot; cost / latency</p>
+      <p class="dt">Streams go peer-to-peer; the cloud only introduces them</p>
+      <p class="dd">Two-way audio can't afford a cloud round-trip. WebRTC connects app and device <b>directly</b>; the cloud handles signaling and a relay only as fallback.</p>
+      <p class="tradeoff"><b>Trade-off:</b> NAT-traversal complexity, bought back in latency and bandwidth cost &mdash; and reversible: fall back to relay if P2P fails.</p>
+    </div>
+
+    <div class="dec">
+      <p class="lens">Well-Architected &middot; cost, privacy, sustainability</p>
+      <p class="dt">Detect motion at the edge, not in the cloud</p>
+      <p class="dd">The device pre-filters motion and only uploads <b>candidate events</b>, not a 24/7 feed. The cloud confirms and records what matters.</p>
+      <p class="tradeoff"><b>Trade-off:</b> squeezing inference onto constrained hardware, versus a bandwidth, storage, and privacy bill that grows with every camera-hour.</p>
+    </div>
+
+    <div class="dec">
+      <p class="lens">Well-Architected &middot; security</p>
+      <p class="dt">Treat onboarding as the sharpest edge</p>
+      <p class="dd">The open-AP window is short-lived, gated by an <b>out-of-band secret</b> (a code on the device / the needle reset), and credentials are encrypted even over the open link.</p>
+      <p class="tradeoff"><b>Trade-off:</b> a few seconds of onboarding friction, versus leaving an unauthenticated door into the customer's home network.</p>
+    </div>
+
+  </div>
+</section>
+
+<section>
+  <p class="kicker"><span class="step">Step 3</span> &middot; what falls out of the decisions</p>
+  <h2>The shape it takes</h2>
+  <p class="note">The decisions draw the boxes and, more importantly, the seams between them. Three tiers, one stable contract across the widest, slowest-to-change gap.</p>
+  <div class="arch">
+    <div class="zones">
+
+      <div class="zone">
+        <p class="zn">Device (firmware)</p>
+        <ul>
+          <li class="local">Button &rarr; ROM ring <span>&mdash; local, offline, no cloud</span></li>
+          <li>Wifi state machine <span>&mdash; host (onboard) &harr; client</span></li>
+          <li>Edge motion filter <span>&mdash; uploads candidates only</span></li>
+          <li>Media pipeline <span>&mdash; WebRTC endpoint</span></li>
+        </ul>
+      </div>
+
+      <div class="aconn">&rarr;<br>versioned contract<br>(MQTT / HTTPS)</div>
+
+      <div class="zone">
+        <p class="zn">Cloud (services)</p>
+        <ul>
+          <li>Device registry &amp; gateway <span>&mdash; pairing, commands</span></li>
+          <li>Notification service <span>&mdash; push fan-out</span></li>
+          <li>Media &amp; signaling <span>&mdash; WebRTC signal, TURN, recordings</span></li>
+        </ul>
+      </div>
+
+      <div class="aconn">&rarr;<br>push +<br>WebRTC media</div>
+
+      <div class="zone">
+        <p class="zn">App (phone)</p>
+        <ul>
+          <li>Notifications <span>&mdash; button &amp; motion</span></li>
+          <li>Live view + two-way audio</li>
+          <li>Recordings, alarm trigger</li>
+          <li class="risk">Onboarding <span>&mdash; sends wifi creds over the open AP</span></li>
+        </ul>
+      </div>
+
+    </div>
+    <div class="archkey">
+      <i><span class="sw" style="background:var(--jade)"></span> must-not-break: works with no network</i>
+      <i><span class="sw" style="background:var(--steel)"></span> contract seam: versioned, low-volatility</i>
+      <i><span class="sw" style="background:var(--ember)"></span> the sharp edge: onboarding &mdash; open AP, gated by an out-of-band secret</i>
+    </div>
+  </div>
+</section>
+
+<section>
+  <p class="kicker"><span class="step">Step 4</span> &middot; now build it the same way</p>
+  <h2>Through the loop, not the vibes</h2>
+  <p class="note">The design above is a spec. It becomes a plan, and both open as living draft PRs &mdash; Copilot-reviewed, gated &mdash; before firmware or a service exists. Then it fans out.</p>
+  <div class="build">
+    <div class="lanes">
+      <div class="lane"><div class="ln">Firmware session</div><div class="lw">ring, wifi SM, edge filter</div></div>
+      <div class="lane"><div class="ln">Services session</div><div class="lw">registry, notify, media</div></div>
+      <div class="lane"><div class="ln">App session</div><div class="lw">onboarding, live view</div></div>
+    </div>
+    <p>Three worktree-isolated sessions run in parallel against <b>one agreed contract</b> &mdash; the seam is settled in the spec, so they don't collide. Handoffs ride a Slack thread; the contract's decisions live in PR comments. Every change clears the same gate: <b>Copilot first, a human graduates it, a second human merges, nobody merges their own work.</b> Datadog watches the device fleet and the services once it ships; the gotcha that bites becomes a doctrine note, the reusable step a shared skill. The kata is hypothetical &mdash; the discipline isn't.</p>
+  </div>
+</section>
+
+<div class="close">
+  <p>A problem we'd never seen, the same method, in one sitting.</p>
+  <p class="cta">This is the loop: <a href="index.html">the argument</a> &middot; the how in <a href="playbook.html">the playbook</a>.</p>
+</div>
+
+<footer>
+  <p>Pathwise engineering &middot; 2026</p>
+</footer>
+
+</div>
+</body>
+</html>
