@@ -124,14 +124,26 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
   .fconn{transform:none;padding:0 7px;align-self:center}
 }
 
-/* ---- build / loop ---- */
-.build{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:20px 22px}
-.build .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 14px}
-.lane{border:1px solid var(--hair);border-radius:10px;background:var(--paper);padding:12px 14px}
-.lane .ln{font:600 12px/1.2 var(--sans);color:var(--ink)}
-.lane .lw{font:500 10px/1 var(--mono);color:var(--muted);letter-spacing:.04em;margin-top:3px}
-.build p{font-size:13.5px;line-height:1.6;color:var(--sub);margin:0}
-.build p b{color:var(--ink);font-weight:600}
+/* ---- step 3: the loop, in action ---- */
+.build{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:24px 24px 22px}
+.track{position:relative}
+.stage{position:relative;padding:0 0 24px 28px;border-left:2px solid var(--hair)}
+.stage:last-child{padding-bottom:0}
+.stage::before{content:"";position:absolute;left:-7px;top:3px;width:12px;height:12px;border-radius:50%;
+  background:var(--card);border:2px solid var(--st,var(--steel))}
+.stage.jade{--st:var(--jade)} .stage.steel{--st:var(--steel)} .stage.ember{--st:var(--ember)}
+.stage .sl{font:600 10px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--st,var(--steel));margin:0 0 5px}
+.stage .sh{font:600 16px/1.3 var(--serif);color:var(--ink);margin:0 0 6px}
+.stage p{font-size:13.5px;line-height:1.6;color:var(--sub);margin:0}
+.stage p b{color:var(--ink);font-weight:600}
+.stage .catch{color:var(--ember);font-weight:600}
+.stage .tag{margin-top:9px;font:500 11px/1.4 var(--mono);color:var(--muted);letter-spacing:.02em}
+.stage .tag b{color:var(--st,var(--steel));font-weight:600}
+.stage .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips span{font:500 11px/1 var(--mono);color:var(--jade);background:var(--jade-soft);padding:5px 9px;border-radius:6px}
+.stage.return{border-left-color:transparent;padding-bottom:0}
+.stage.return::before{border-style:dashed;border-color:var(--jade);background:var(--jade-soft)}
+.stage.return .sh{color:var(--jade);font-size:15px}
 
 /* ---- close ---- */
 .close{margin-top:56px;padding:22px;border:1px solid var(--hair);border-radius:14px;background:var(--card);text-align:center}
@@ -282,16 +294,45 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
 </section>
 
 <section>
-  <p class="kicker"><span class="step">Step 3</span> &middot; now build it the same way</p>
-  <h2>The load test is the proof</h2>
-  <p class="note">Spec and plan open as living draft PRs, Copilot-reviewed and gated, before code. Then it fans out &mdash; and this design has a fitness function it must pass.</p>
+  <p class="kicker"><span class="step">Step 3</span> &middot; the part that actually ships software</p>
+  <h2>Build &rarr; review &rarr; prove &rarr; ship</h2>
+  <p class="note">Everything above is a spec &mdash; it becomes a plan, and both open as living draft PRs before a line of code. For a ticketing on-sale the after-plan half is the whole ballgame: you get <b>one shot at 10k/sec, with no retries</b>. Same concert, traced through the loop.</p>
   <div class="build">
-    <div class="lanes">
-      <div class="lane"><div class="ln">Sell-path session</div><div class="lw">gate, seat grid, holds</div></div>
-      <div class="lane"><div class="ln">Services session</div><div class="lw">catalog, order, pay</div></div>
-      <div class="lane"><div class="ln">Read-path session</div><div class="lw">cached seat counts</div></div>
+    <div class="track">
+
+      <div class="stage jade">
+        <p class="sl">Build &middot; fan out, one contract</p>
+        <p class="sh">Three sessions, one seam</p>
+        <p>The seam between the hot sell-path and the calm services was settled in <b>the call</b> (Step&nbsp;2), so three worktree-isolated sessions run in <b>parallel against that one contract</b> &mdash; nobody's waiting on anybody. Handoffs ride a focused Slack thread; the reason behind each contract decision lives in the PR comments, not in someone's head.</p>
+        <div class="chips"><span>sell-path &middot; gate, seat grid, holds</span><span>services &middot; catalog, order, pay</span><span>read-path &middot; cached seat counts</span></div>
+      </div>
+
+      <div class="stage steel">
+        <p class="sl">Review &middot; the gate, no exceptions</p>
+        <p class="sh">Where the invariant gets defended</p>
+        <p>Every diff clears the same gate &mdash; AI-written code gets <b>more</b> scrutiny, not a pass. On this draw the review catches a real one: the order service <span class="catch">read seat availability straight from the browse cache instead of taking a hold through the grid's single owner</span> &mdash; a race that oversells the last seat under load. The Step&nbsp;1 invariant, violated in code, caught at the seam.</p>
+        <p class="tag"><b>Gate:</b> Copilot first &rarr; a human graduates it &rarr; a second human merges &middot; nobody merges their own work</p>
+      </div>
+
+      <div class="stage ember">
+        <p class="sl">Prove &middot; the load test is the proof</p>
+        <p class="sh">Done means the fitness function is green</p>
+        <p>Here's what makes ticketing different: the deciding evidence isn't that it compiles &mdash; it's a <b>k6 fitness function</b>. A run at <b>10,000/sec</b> that asserts <b>zero double-sells</b> and that the admission gate <b>sheds cleanly instead of collapsing</b>. Correctness under the spike is the definition of done; a green build that hasn't survived the load test hasn't proven anything.</p>
+        <p class="tag"><b>Fitness function:</b> 10k/sec &middot; 0 double-sells &middot; gate sheds, never collapses</p>
+      </div>
+
+      <div class="stage jade">
+        <p class="sl">Ship &middot; rehearsed, then it talks back</p>
+        <p class="sh">One-shot event, backout path first</p>
+        <p>An on-sale doesn't get a retry, so ship is a rehearsal: the gate <b>dark-launches behind a flag</b> and rollback is one flip &mdash; a backout path before the blast radius. Then Datadog watches the real 10k/sec, and the failure a load rig never surfaces &mdash; a partner API buckling mid-spike &mdash; becomes a <b>doctrine note</b> and a <b>shared skill</b> the next on-sale inherits.</p>
+      </div>
+
+      <div class="stage return jade">
+        <p class="sh">&#8617; The loop closes &mdash; the proof becomes the next spec</p>
+        <p>The team keeps the judgment. Claude burns the tokens; what compounds is the craft. The kata is hypothetical &mdash; the way we'd prove it isn't.</p>
+      </div>
+
     </div>
-    <p>Worktree-isolated sessions build against one agreed contract; every change clears the same gate &mdash; <b>Copilot first, a human graduates it, a second human merges.</b> But the deciding evidence here is a <b>load test</b>: a k6 run at 10,000/sec that asserts <b>zero double-sells</b> and that the admission gate sheds cleanly instead of collapsing. The design isn't done when it compiles &mdash; it's done when the fitness function is green. Then Datadog watches the on-sale live, and what we learn feeds the next one. <b>The kata is hypothetical; the way we'd prove it isn't.</b></p>
   </div>
 </section>
 
