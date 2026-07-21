@@ -116,14 +116,26 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
 .archkey i{font-style:normal;display:inline-flex;align-items:center;gap:6px}
 .archkey .sw{width:10px;height:10px;border-radius:50%;display:inline-block}
 
-/* ---- build / loop ---- */
-.build{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:20px 22px}
-.build .lanes{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin:0 0 14px}
-.lane{border:1px solid var(--hair);border-radius:10px;background:var(--paper);padding:12px 14px}
-.lane .ln{font:600 12px/1.2 var(--sans);color:var(--ink)}
-.lane .lw{font:500 10px/1 var(--mono);color:var(--muted);letter-spacing:.04em;margin-top:3px}
-.build p{font-size:13.5px;line-height:1.6;color:var(--sub);margin:0}
-.build p b{color:var(--ink);font-weight:600}
+/* ---- step 4: the loop, in action ---- */
+.build{border:1px solid var(--hair);border-radius:14px;background:var(--card);padding:24px 24px 22px}
+.track{position:relative}
+.stage{position:relative;padding:0 0 24px 28px;border-left:2px solid var(--hair)}
+.stage:last-child{padding-bottom:0}
+.stage::before{content:"";position:absolute;left:-7px;top:3px;width:12px;height:12px;border-radius:50%;
+  background:var(--card);border:2px solid var(--st,var(--steel))}
+.stage.jade{--st:var(--jade)} .stage.steel{--st:var(--steel)} .stage.ember{--st:var(--ember)}
+.stage .sl{font:600 10px/1 var(--mono);letter-spacing:.11em;text-transform:uppercase;color:var(--st,var(--steel));margin:0 0 5px}
+.stage .sh{font:600 16px/1.3 var(--serif);color:var(--ink);margin:0 0 6px}
+.stage p{font-size:13.5px;line-height:1.6;color:var(--sub);margin:0}
+.stage p b{color:var(--ink);font-weight:600}
+.stage .catch{color:var(--ember);font-weight:600}
+.stage .tag{margin-top:9px;font:500 11px/1.4 var(--mono);color:var(--muted);letter-spacing:.02em}
+.stage .tag b{color:var(--st,var(--steel));font-weight:600}
+.stage .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chips span{font:500 11px/1 var(--mono);color:var(--jade);background:var(--jade-soft);padding:5px 9px;border-radius:6px}
+.stage.return{border-left-color:transparent;padding-bottom:0}
+.stage.return::before{border-style:dashed;border-color:var(--jade);background:var(--jade-soft)}
+.stage.return .sh{color:var(--jade);font-size:15px}
 
 /* ---- close ---- */
 .close{margin-top:56px;padding:22px;border:1px solid var(--hair);border-radius:14px;background:var(--card);text-align:center}
@@ -308,16 +320,45 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
 </section>
 
 <section>
-  <p class="kicker"><span class="step">Step 4</span> &middot; now build it the same way</p>
-  <h2>Through the loop, not the vibes</h2>
-  <p class="note">The design above is a spec. It becomes a plan, and both open as living draft PRs &mdash; Copilot-reviewed, gated &mdash; before firmware or a service exists. Then it fans out.</p>
+  <p class="kicker"><span class="step">Step 4</span> &middot; the part that actually ships software</p>
+  <h2>Build &rarr; review &rarr; ship &rarr; learn</h2>
+  <p class="note">Everything above is a spec &mdash; it becomes a plan, and both open as living draft PRs before a line of firmware exists. The design is the easy half. This is the half people mean when they ask whether AI-driven work is any good: what happens between "here's the plan" and "it's running in the field." Same doorbell, traced through the loop.</p>
   <div class="build">
-    <div class="lanes">
-      <div class="lane"><div class="ln">Firmware session</div><div class="lw">ring, wifi SM, edge filter</div></div>
-      <div class="lane"><div class="ln">Services session</div><div class="lw">registry, notify, media</div></div>
-      <div class="lane"><div class="ln">App session</div><div class="lw">onboarding, live view</div></div>
+    <div class="track">
+
+      <div class="stage jade">
+        <p class="sl">Build &middot; fan out, one contract</p>
+        <p class="sh">Three sessions, no collision</p>
+        <p>The seam between device, cloud, and app was frozen in the spec (Step&nbsp;3), so three worktree-isolated sessions run in <b>parallel against that one contract</b> &mdash; nobody's waiting on anybody. Handoffs ride a focused Slack thread; the reason behind each contract decision lives in the PR comments, not in someone's head.</p>
+        <div class="chips"><span>firmware &middot; ring, wifi SM, edge filter</span><span>services &middot; registry, notify, media</span><span>app &middot; onboarding, live view</span></div>
+      </div>
+
+      <div class="stage steel">
+        <p class="sl">Review &middot; the gate, no exceptions</p>
+        <p class="sh">Where the drift gets caught</p>
+        <p>Every diff clears the same gate &mdash; AI-written code gets <b>more</b> scrutiny, not a pass. On this draw the review catches a real one: the app lane <span class="catch">shipped wifi credentials over the open AP before the out-of-band gate from Step&nbsp;2 landed.</span> That's decision-to-code drift &mdash; the plan said one thing, the diff did another &mdash; caught at the seam, not in the field.</p>
+        <p class="tag"><b>Gate:</b> Copilot first &rarr; a human graduates it &rarr; a second human merges &middot; nobody merges their own work</p>
+      </div>
+
+      <div class="stage ember">
+        <p class="sl">Ship &middot; reversible by construction</p>
+        <p class="sh">A backout path before the blast radius</p>
+        <p>Firmware rolls to a <b>canary cohort behind a flag</b>; services deploy dark, then flip. The P2P&rarr;relay fallback from Step&nbsp;2 is proven in staging <b>before</b> a real network gets to break it. Nothing ships that we can't take back in one move &mdash; optimize for rollback, minimize blast radius.</p>
+        <p class="tag"><b>Ship:</b> flag-gated &middot; canary cohort &middot; one-move rollback</p>
+      </div>
+
+      <div class="stage jade">
+        <p class="sl">Learn &middot; production talks back</p>
+        <p class="sh">The signal becomes doctrine</p>
+        <p>Datadog watches the fleet and the services the moment they ship. When carrier-grade NAT starves the P2P path in the wild &mdash; the failure a whiteboard never surfaces &mdash; that's not just a fix. The gotcha becomes a <b>doctrine note</b>; the onboarding-security step becomes a <b>shared skill</b> the next session inherits; the signal sharpens the next spec.</p>
+      </div>
+
+      <div class="stage return jade">
+        <p class="sh">&#8617; The loop closes &mdash; a sharper spec next time</p>
+        <p>The team keeps the judgment. Claude burns the tokens; what compounds is the craft. The kata is hypothetical &mdash; the discipline isn't.</p>
+      </div>
+
     </div>
-    <p>Three worktree-isolated sessions run in parallel against <b>one agreed contract</b> &mdash; the seam is settled in the spec, so they don't collide. Handoffs ride a Slack thread; the contract's decisions live in PR comments. Every change clears the same gate: <b>Copilot first, a human graduates it, a second human merges, nobody merges their own work.</b> Datadog watches the device fleet and the services once it ships; the gotcha that bites becomes a doctrine note, the reusable step a shared skill. The kata is hypothetical &mdash; the discipline isn't.</p>
   </div>
 </section>
 
