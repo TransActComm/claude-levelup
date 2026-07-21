@@ -101,6 +101,8 @@ code{font:500 12.5px var(--mono);background:var(--jade-soft);padding:1px 5px;bor
 .refgroup li span{color:var(--muted);display:block;font-size:12px;line-height:1.45;margin-top:2px}
 .refgroup a{color:var(--jade);text-decoration:none;border-bottom:1px solid transparent}
 .refgroup a:hover{border-bottom-color:var(--jade)}
+.refgroup .reflink{display:inline-block;margin-top:6px;font:500 10.5px/1 var(--mono);letter-spacing:.03em}
+.refgroup .reflink::before{content:"\2197";margin-right:4px;opacity:.7}
 
 .closing{margin-top:56px;padding:20px 22px;border:1px solid var(--hair);border-radius:14px;background:var(--card)}
 .closing p{margin:0;font:italic 400 16px/1.55 var(--serif);color:var(--ink)}
@@ -124,7 +126,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
 <a class="backlink" href="index.html">&larr; back to the argument</a>
 
 <header>
-  <p class="eyebrow">Pathfinders engineering &middot; the playbook</p>
+  <p class="eyebrow">Pathwise engineering &middot; the playbook</p>
   <h1>Run the loop on your team</h1>
   <p class="lede">The case lives next door. This is the <b>how</b>: two changes walked through the loop at different sizes, the kit to stand it up, and the reading behind the practice.</p>
 </header>
@@ -211,18 +213,18 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
     <div class="refgroup">
       <h3>Architecture &amp; design</h3>
       <ul>
-        <li>Vlad Khononov &mdash; <em>Balancing Coupling in Software Design</em><span>Assess a seam on strength, distance, volatility. Decompose only where it converts a strong cross-deployable seam into a contract.</span></li>
-        <li>Richards &amp; Ford &mdash; <em>Software Architecture: The Hard Parts</em><span>No best practices, only trade-offs. Disintegrators vs. integrators; govern with fitness functions.</span></li>
-        <li>Gregor Hohpe &mdash; <em>The Software Architect Elevator</em><span>Ride between strategy and the engine room. Architecture is selling options.</span></li>
-        <li>AWS Well-Architected Framework<span>Six pillars. Surface which one a change trades against.</span></li>
+        <li>Vlad Khononov &mdash; <em>Balancing Coupling in Software Design</em><span>Assess a seam on strength, distance, volatility. Decompose only where it converts a strong cross-deployable seam into a contract.</span><a class="reflink" href="https://coupling.dev/posts/dimensions-of-coupling/" target="_blank" rel="noopener">coupling.dev</a></li>
+        <li>Richards &amp; Ford &mdash; <em>Software Architecture: The Hard Parts</em><span>No best practices, only trade-offs. Disintegrators vs. integrators; govern with fitness functions.</span><a class="reflink" href="https://developertoarchitect.com/lessons/" target="_blank" rel="noopener">developertoarchitect.com</a></li>
+        <li>Gregor Hohpe &mdash; <em>The Software Architect Elevator</em><span>Ride between strategy and the engine room. Architecture is selling options.</span><a class="reflink" href="https://architectelevator.com/" target="_blank" rel="noopener">architectelevator.com</a></li>
+        <li>AWS Well-Architected Framework<span>Six pillars. Surface which one a change trades against.</span><a class="reflink" href="https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html" target="_blank" rel="noopener">docs.aws.amazon.com</a></li>
       </ul>
     </div>
     <div class="refgroup">
       <h3>Leadership &amp; delivery</h3>
       <ul>
-        <li>James Stanier &mdash; <em>Become an Effective Software Engineering Manager</em><span>Gather &rarr; Decide &rarr; Execute. Make the invisible visible; empower over heroics.</span></li>
-        <li>Humble &amp; Farley &mdash; <em>Continuous Delivery</em><span>Small, frequent, automated, reversible. The build/test/ship half of the loop.</span></li>
-        <li>Fowler &mdash; <em>Refactoring</em> &amp; the testing pyramid<span>Clean code and a healthy test shape are the craft the AI runs on top of.</span></li>
+        <li>James Stanier &mdash; <em>Become an Effective Software Engineering Manager</em><span>Gather &rarr; Decide &rarr; Execute. Make the invisible visible; empower over heroics.</span><a class="reflink" href="https://www.theengineeringmanager.com/" target="_blank" rel="noopener">theengineeringmanager.com</a></li>
+        <li>Humble &amp; Farley &mdash; <em>Continuous Delivery</em><span>Small, frequent, automated, reversible. The build/test/ship half of the loop.</span><a class="reflink" href="https://continuousdelivery.com/" target="_blank" rel="noopener">continuousdelivery.com</a></li>
+        <li>Fowler &mdash; <em>Refactoring</em> &amp; the testing pyramid<span>Clean code and a healthy test shape are the craft the AI runs on top of.</span><a class="reflink" href="https://refactoring.com/" target="_blank" rel="noopener">refactoring.com</a></li>
       </ul>
     </div>
     <div class="refgroup">
@@ -230,7 +232,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
       <ul>
         <li><a href="https://claude.com/claude-code" target="_blank" rel="noopener">Claude Code</a><span>The agentic CLI the sessions run in.</span></li>
         <li><a href="https://docs.github.com/en/copilot/using-github-copilot/code-review/using-copilot-code-review" target="_blank" rel="noopener">GitHub Copilot code review</a><span>The automated first pass on every draft PR.</span></li>
-        <li>Superpowers<span>The spec-driven brainstorm &rarr; plan &rarr; execute workflow.</span></li>
+        <li><a href="https://github.com/obra/superpowers#quickstart" target="_blank" rel="noopener">Superpowers</a><span>The spec-driven brainstorm &rarr; plan &rarr; execute workflow.</span></li>
         <li>Team skills &amp; plugins<span>Platform workflows promoted from one engineer's shortcut into everyone's.</span></li>
       </ul>
     </div>
@@ -243,7 +245,7 @@ footer p{font:400 11px/1.4 var(--mono);color:var(--muted);margin:0;letter-spacin
 </div>
 
 <footer>
-  <p>Pathfinders engineering &middot; 2026</p>
+  <p>Pathwise engineering &middot; 2026</p>
 </footer>
 
 </div>
